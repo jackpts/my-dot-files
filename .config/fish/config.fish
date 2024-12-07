@@ -57,7 +57,6 @@ alias bashedit='nvim ~/.bashrc --allow-root'
 alias fishedit='nvim ~/.config/fish/config.fish'
 abbr u1 'sudo pacman -Suyy'
 abbr u2 'yay -Suyy --noconfirm'
-alias update_neofetch_config='sudo nano ~/.config/neofetch/config.conf'
 alias mirrors_list='cat /etc/pacman.d/mirrorlist'
 alias mirrors_find='reflector --latest 20 --sort rate'
 alias mirrors_update='sudo reflector --latest 20 --sort rate --save /etc/pacman.d/mirrorlist'
@@ -144,10 +143,9 @@ function backup
         pacman -Qqen >/home/jacky/soft/pkglist_pacman.txt
         pacman -Qqem >/home/jacky/soft/pkglist_aur.txt
 
-        set backupArr (string split ' ' '/home/jacky/Nextcloud/ /etc/hosts /etc/resolv.conf /etc/profile /etc/nsswitch.conf /etc/fstab /etc/locale.conf /etc/vconsole.conf /etc/systemd/logind.conf /etc/pacman.conf /boot/refind_linux.conf /boot/EFI/refind/refind.conf /home/jacky/.config/neofetch/config.conf /home/jacky/.config/fish/config.fish /home/jacky/.config/fish/functions /home/jacky/.local/share/remmina /home/jacky/Documents/my-kpxc1db.kdbx /home/jacky/Documents/pgp /home/jacky/Documents/CV /home/jacky/.gnupg /home/jacky/.ssh /home/jacky/.gitconfig /home/jacky/tor.keyring /home/jacky/adb_config_Linux_OSX.sh /etc/gdm/Init/Default /home/jacky/vpn /home/jacky/soft/gnome_ext_list.txt /home/jacky/soft/pkglist_pacman.txt /home/jacky/soft/pkglist_aur.txt /home/jacky/Documents/2FA /home/jacky/Documents/NPD /home/jacky/Documents/Deel /home/jacky/.config/nvim /home/jacky/.git* /home/jacky/.vimrc /home/jacky/.vim_runtime/vimrcs /home/jacky/.config/alacritty/*.toml /home/jacky/.tmux.conf /home/jacky/.zshrc /home/jacky/.bashrc /home/jacky/.config/catnap/*.toml')
 
         for b in $backupArr
-            7z u -bt $outputDir/all-$cur_Date.7z -spf2 -p1 $b -xr!ppl-CV-s
+            7z u -bt $outputDir/all-$cur_Date.7z -spf2 -p1 $b
         end
 
     end
@@ -160,22 +158,6 @@ function backup_git
     sudo 7z u -bt $outputDir/git-$cur_Date.7z -spf2 -mx7 /home/jacky/git -xr!node_modules -xr!_others -xr!wpa2-wordlists '-xr!*.7z' '-xr!*.dump' '-xr!*.pack'
 end
 
-function backup_eff
-    set cur_Date (date +"%d%b-%H")
-    set outputDir /run/media/jacky/back2up/regular
-
-    # sudo 7z u -bt $outputDir/eff_$cur_Date.7z -spf2 -mx7 /home/jacky/git/EFF/efficiently/packages/client/design-schedule -xr!node_modules '-xr!*.pack'
-    sudo 7z u -bt $outputDir/eff_$cur_Date.7z -spf2 -mx7 /home/jacky/git/EFF -xr!node_modules '-xr!*.pack' -xr!.angular
-end
-
-
-function backup_job
-    set cur_Date (date +"%d%b-%H")
-    set outputDir /run/media/jacky/back1up/regular
-
-    sudo 7z u -bt $outputDir/jobs-$cur_Date.7z -spf2 -mx7 /home/jacky/Documents/CV /home/jacky/Documents/jobs/ /home/jacky/Documents/MyCerts
-end
-
 function backup_nvim
     set cur_Date (date +"%d%b-%H")
     set outputDir /run/media/jacky/back1up/regular
@@ -183,60 +165,22 @@ function backup_nvim
     sudo 7z u -bt $outputDir/nvim-$cur_Date.7z -spf2 -mx7 /home/jacky/.config/nvim /home/jacky/.local/share/nvim /home/jacky/.local/state/nvim /home/jacky/.cache/nvim
 end
 
-function idea_reset_eval
-    set ideaDir '/home/jacky/.config/JetBrains/IntelliJIdea2021.2/'
-    cd $ideaDir
-    rm -rfv ./eval
-    # rm ./idea.key
-    #rm ./options/other.xml
-    sed -i '/name="evlsprt.*"/d'./options/other.xml >/dev/null 2>&1
-    # rm -rfv ~/.java/.userPrefs/prefs.xml
-    # rm -rfv ~/.java/.userPrefs/jetbrains/prefs.xml
-    sed -i '/key="JetBrains\.UserIdOnMachine"/d' ~/.java/.userPrefs/prefs.xml
-    sed -i '/key="device_id"/d' ~/.java/.userPrefs/jetbrains/prefs.xml
-    sed -i '/key="user_id_on_machine"/d' ~/.java/.userPrefs/jetbrains/prefs.xml
-    find ~/.java/.userPrefs/jetbrains/ -name "evlsprt*" -type d -exec rm -rfv {} \; >/dev/null 2>&1
-end
-
 function write_iso
     # sudo dd if=$1 of=/dev/sda1 bs=4M status=progress conv=fsync
     sudo dd if=$1 of=/dev/sda1 bs=100M conv=fsync
 end
 
-
-# Softvoya
-# alias softvoya_vpn_internal='sudo openvpn --config ~/soft/softvoya.vpn/eugene.p-internal.ovpn --auth-user-pass --auth-retry interact'
-# alias softvoya_vpn_internal_full='sudo openvpn --config ~/soft/softvoya.vpn/eugene.p.ovpn --auth-user-pass --auth-retry interact'
-# alias softvoya_vpn_inscript='sudo openvpn --config ~/soft/softvoya.vpn/vpn-inscript.ovpn --auth-user-pass --auth-retry interact'
-
-# Retail.Me
-#alias project_old_start='cd ~/git/emma-frontend && cls && nvm use 10.24.1 && npm run server:localWithBeta'
-# alias emma_start='cd ~/git/emma-frontend && cls && nvm use 16.16.0 && set IS_DDEV_PROJECT true && npm run server:localWithBeta'
-# alias start_local_build='cd ~/git/emma-frontend && cls && npm run build:beta && npm run local-http-server'
-# alias browserstack_run='/home/jacky/soft/BrowserStackLocal --key eEN7qkMVWfvVsCYBJMzq'
-
-### Loyalty KazakTelecom
-# alias loyal_start='cd /home/jacky/git/loyalty-program-front && yarn start'
-# alias loyal_test='cd /home/jacky/git/loyalty-program-front && yarn test --silent'
-# alias loyal_ssh='ssh jack@207.154.223.224'
-
-### VKS.RU
-# alias vsk_vpn='echo "321321Aa@" | sudo openconnect --csd-wrapper=/usr/lib/openconnect/csd-post.sh -u Domnikov --passwd-on-stdin --authgroup=vskremote dev-anc.vsk.ru'
-# alias vsk_rdp='rdesktop -u Domnikov -p "321321Aa@" -g 1400x1050 -r sound:local -r clipboard:PRIMARYCLIPBOARD -T VSK.RU -v 192.168.136.55'
-
-# TLP Battery stat
-# alias tlp_stat='sudo tlp-stat -b'
-
 alias established='netstat -anp | grep ESTABLISHED'
 
-# function generate_pdf
-#     cd /home/jacky/git/emma-frontend/templates
-#     wkhtmltopdf --dpi 72 --lowquality --margin-bottom 5mm --margin-left 5mm --margin-right 5mm --margin-top 5mm --page-height 297mm --page-width 210mm --disable-smart-shrinking 'letter.html' 'letter.pdf'
-# end
+function generate_pdf
+    cd /home/jacky/git/emma-frontend/templates
+    wkhtmltopdf --dpi 72 --lowquality --margin-bottom 5mm --margin-left 5mm --margin-right 5mm --margin-top 5mm --page-height 297mm --page-width 210mm --disable-smart-shrinking 'letter.html' 'letter.pdf'
+end
 
 function _tide_item_git
     fish_git_prompt
 end
+
 
 function fish_prompt__ --description 'Informative prompt'
     #Save the return status of the previous command
@@ -272,53 +216,24 @@ alias mining_start='cd ~/soft/NBMiner_Linux && ./start_eth.sh'
 alias edit_miner='nvim ~/soft/NBMiner_Linux/start_eth.sh'
 
 # EFF
-
 function beep
-    # paplay /home/jacky/Music/ringtones/keep-moving_ring.mp3
     play -n synth 0.1 sine 880 vol 0.2
 end
 
-# 5432,27017,6379,8001,3001
-# function eff_lsof_kill
-#     sudo lsof -i:27017 | grep docker-pr | awk '{print $2}' | xargs -r sudo kill
-#     sudo lsof -i:5432 | grep docker-pr | awk '{print $2}' | xargs -r sudo kill
-#     sudo lsof -i:6379 | grep docker-pr | awk '{print $2}' | xargs -r sudo kill
-#     sudo lsof -i:8001 | grep docker-pr | awk '{print $2}' | xargs -r sudo kill
-#     sudo lsof -i:3001 | grep docker-pr | awk '{print $2}' | xargs -r sudo kill
-# end
-
-
-# alias project_start='cd /home/jacky/git/EFF/efficiently/packages/client/design-schedule && pnpm start'
-# alias eff_fe='cd /home/jacky/git/EFF/efficiently/packages/client/design-schedule && pnpm start'
-# alias eff_build='cd /home/jacky/git/EFF/efficiently/packages/client/design-schedule && pnpm run build'
-# alias eff_npm_fe='cd /home/jacky/git/EFF/efficiently/ && sudo pnpm i && pnpm run bootstrap:client && pnpm run bootstrap:efficiently && beep'
-# alias eff_npm_be='cd /home/jacky/git/EFF/efficiently/packages/server && pnpm i && pnpm run pre && pnpm run bootstrap:identity && pnpm run bootstrap:efficiently && pnpm run bootstrap:catalog && pnpm run bootstrap:client && pnpm run bootstrap:post-deploy-runner && beep'
-# alias eff_node_modules_cleanup='cd ~/git/EFF/efficiently/scripts && sh rm-output.sh'
-# alias eff_deploy='cd /home/jacky/git/EFF/efficiently/ && sudo npm update --global @salesforce/cli && npm run deploy && beep'
-# alias eff_books_konva='cd /home/jacky/git/EFF/efficiently/packages/shared/books-konva && sh build-konva-layer.sh'
-# alias eff_terragrunt_build='cd /home/jacky/git/EFF/efficiently/external-pdf/stages/dev14 && terragrunt run-all apply -lock=false && beep'
-# alias eff_eff='cd /home/jacky/git/EFF/efficiently/packages/server/efficiently-api && docker-compose up'
-# alias eff_identity='cd /home/jacky/git/EFF/efficiently/packages/server/identity-api && docker-compose up'
-# alias eff_catalog='cd /home/jacky/git/EFF/efficiently/packages/server/item-catalog-api && docker-compose up'
-# alias eff_vpn='cd ~/vpn/eff/ && sudo openvpn --config yauheni.pauliukanets.ovpn --auth-user-pass pass.txt'
+alias eff_vpn='cd ~/vpn/eff/ && sudo openvpn --config yauheni.pauliukanets.ovpn --auth-user-pass pass.txt'
 alias docker_remove_all='docker rm -v -f $(docker ps -qa)'
 alias docker_prune='docker system prune -a && docker system prune --volumes && docker volume rm $(docker volume ls -qf dangling=true)'
 alias docker_stop='sudo systemctl stop docker && sudo systemctl stop docker.socket'
 alias docker_reload='sudo systemctl stop docker && systemctl daemon-reload && systemctl start docker'
-# alias docker_recreate='cd /home/jacky/git/EFF/efficiently/packages/server/efficiently-api && docker-compose up -d --force-recreate && beep'
-# alias eff_cd_eff='cd /home/jacky/git/EFF/efficiently/packages/server/efficiently-api/'
-# alias eff_cd_identity='cd /home/jacky/git/EFF/efficiently/packages/server/identity-api/'
-# alias eff_cd_catalog='cd /home/jacky/git/EFF/efficiently/packages/server/item-catalog-api/'
-# alias eff_vim='cd /home/jacky/git/EFF/efficiently/ && nvim'
-# alias eff_root='cd /home/jacky/git/EFF/efficiently/'
-# alias eff_sonar_up='cd /home/jacky/git/EFF/efficiently/sonar && docker-compose up'
-# alias eff_sonar_setup='cd /home/jacky/git/EFF/efficiently/sonar && sh setup.sh'
-# alias eff_sonar_scan='cd /home/jacky/git/EFF/efficiently/packages/client/design-schedule && sonar-scanner \
-#           -Dsonar.projectKey=pr-7 \
-#           -Dsonar.sources=. \
-#           -Dsonar.host.url=http://127.0.0.1:9000 \
-#           -Dsonar.token=sqp_7cb942818f8ebb44fd1e7d784ffce3e65a2762ce'
-# alias eff_sonar_report='cd /home/jacky/git/EFF/efficiently/packages/client/design-schedule && export SONAR_TOKEN=squ_dae9c34ad3479eabe05355b5300436d184788737 && sonar-findings-export -k pr-7 -f /home/jacky/Downloads/pr-7-issues.csv'
+alias docker_recreate='cd /home/jacky/git/EFF/efficiently/packages/server/efficiently-api && docker-compose up -d --force-recreate && beep'
+alias eff_sonar_up='cd /home/jacky/git/EFF/efficiently/sonar && docker-compose up'
+alias eff_sonar_setup='cd /home/jacky/git/EFF/efficiently/sonar && sh setup.sh'
+alias eff_sonar_scan='cd /home/jacky/git/EFF/efficiently/packages/client/design-schedule && sonar-scanner \
+          -Dsonar.projectKey=pr-1 \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://127.0.0.1:9000 \
+          -Dsonar.token=sqp_7cbxxx'
+alias eff_sonar_report='cd /home/jacky/git/EFF/efficiently/packages/client/design-schedule && export SONAR_TOKEN=squ_daexxx && sonar-findings-export -k pr-1 -f /home/jacky/Downloads/pr-1-issues.csv'
 
 # NVIM
 alias v "nvim ."
@@ -332,9 +247,6 @@ alias ala-edit='nvim ~/.config/alacritty'
 function :q
     exit
 end
-
-### hack
-alias hack_168='cd /home/jacky/hack && sudo aircrack-ng -w ./dict/rockyou.txt 68:ff:7b:27:96:cf ./168/clean-168.cap'
 
 ### git
 function gcl
